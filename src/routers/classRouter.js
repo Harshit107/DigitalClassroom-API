@@ -100,6 +100,8 @@ router.post('/class/add/student', auth, authAdmin, async (req,res)=> {
     
 
 })
+
+//add admin
 router.post('/class/add/admin', auth, authAdmin, async (req,res)=> {
     try {
 
@@ -132,7 +134,7 @@ router.post('/class/add/admin', auth, authAdmin, async (req,res)=> {
     }
 })
 
-
+//make admin from student
 router.post('/class/add/admin/fromStudent', auth, authAdmin, async (req,res)=> {
     try {
 
@@ -195,6 +197,7 @@ router.get('/class/id/:id', async (req, res) => {
     }
 })
 
+//demote admin to student
 router.post('/class/add/student/fromAdmin', auth, authAdmin, async (req,res)=> {
     try {
 
@@ -219,9 +222,10 @@ router.post('/class/add/student/fromAdmin', auth, authAdmin, async (req,res)=> {
         const studentExit = myClass.students.filter((students)=> {
             return students.student == adminId
         })
-        
         if(studentExit.length !== 0)
             return res.status(406).send({messgae:'User is already an Student'})
+        if(myClass.admins.length <2 )
+            return res.status(406).send({error : "You cannot leave, class must have one admin! "})
 
         // adding user to Users and student        
         myClass.students = myClass.students.concat({student : adminId})
@@ -290,9 +294,41 @@ router.get('/class', async (req, res) => {
     }
 })
 
+router.get('/class/people',auth, async(req,res)=> {
+
+    const classId = req.body.classId
+    const requestClass = await Class.findOne({ _id : classId })
+    if(!requestClass)
+        return res.status(404).send('Class not found')
+    res.send(requestClass.users)
+
+}) 
+router.get('/class/people/student',auth, async(req,res)=> {
+
+    const classId = req.body.classId
+    const requestClass = await Class.findOne({ _id : classId })
+    if(!requestClass)
+        return res.status(404).send('Class not found')
+    res.send(requestClass.students)
+
+}) 
+router.get('/class/people/admin',auth, async(req,res)=> {
+
+    const classId = req.body.classId
+    const requestClass = await Class.findOne({ _id : classId })
+    if(!requestClass)
+        return res.status(404).send('Class not found')
+    res.send(requestClass.admins)
+
+}) 
+
+
+//*****///**--------------Highlt Risky ---------********** */ */
 router.delete('/class', async (req, res) => {
     await Class.deleteMany()
     res.send("OK")
 })
+
+
 
 module.exports = router
