@@ -18,8 +18,8 @@ const classSchema = new mongoose.Schema({
             required:true,
         }
     }],
-    admin : [{
-        type :
+    admins : [{
+        admin :
         {
             type:mongoose.Schema.Types.ObjectId,
             trim:true

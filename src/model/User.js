@@ -48,6 +48,21 @@ userSchema.methods.toJSON = function () {
     return userObject
 }
 
+userSchema.virtual('students', {
+    ref : 'Class',
+    localField : '_id',
+    foreignField : 'students.student'
+})
+userSchema.virtual('admins', {
+    ref : 'Class',
+    localField : '_id',
+    foreignField : 'admins.admin'
+})
+userSchema.virtual('classes', {
+    ref: 'Class',
+    localField: "_id",
+    foreignField: 'users.member'
+})
 userSchema.pre('save', async function (next) {
     const user = this;
 
@@ -77,11 +92,7 @@ userSchema.statics.findByCredentails = async (email, password) => {
     return user
 }
 
-userSchema.virtual('classes', {
-    ref: 'Class',
-    localField: "_id",
-    foreignField: 'users.member'
-})
+
 
 userSchema.methods.generateToken = async function () {
     const user = this
