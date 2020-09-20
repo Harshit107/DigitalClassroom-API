@@ -2,3 +2,4 @@ mongoDB-data
 node_modules
 .env
 package-lock.json
+uploads

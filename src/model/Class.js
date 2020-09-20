@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const File = require('../model/File')
+const fs = require('fs')
 
 
 const classSchema = new mongoose.Schema({
@@ -39,7 +41,34 @@ const classSchema = new mongoose.Schema({
 {
     timestamps : true
 })
+classSchema.virtual('files', {
+    ref : 'File',
+    localField : '_id',
+    foreignField : 'classId'
 
+})
+classSchema.pre('deleteOne', { document: true}, async function(next){
+    const myClass = this;
+
+    const allFiles = await File.find({classId : myClass._id})
+
+    allFiles.forEach( file => {
+        const path = file.path
+
+        fs.unlink(path, (err) => {
+          if (err) {
+            console.error(err)
+            return res.status(404).send({
+              error : err
+            })
+          }
+        })
+        file.deleteOne()
+    })
+    
+    //await File.deleteMany({classId : myClass._id})
+    next()
+})
 
 
 const Class = mongoose.model('Class',classSchema)

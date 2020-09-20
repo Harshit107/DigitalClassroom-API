@@ -22,6 +22,13 @@ const userSchema = new mongoose.Schema({
                 throw new Error("Enter Valid Email-ID")
         }
     },
+    isVerified : {
+        type : Boolean,
+        default:false
+    },
+    emailToken : {
+        type:String
+    },
     password: {
         type: String,
         required: true,

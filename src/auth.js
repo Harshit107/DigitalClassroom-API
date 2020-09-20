@@ -13,7 +13,9 @@ const auth = async (req,res,next)=>{
 
     const user = await User.findOne( {_id:decode._id, 'tokens.token':token } )
     if(!user)
-        res.status(401).send({error:'Authentication Required'})
+        return res.status(401).send({error:'Authentication Required'})
+    if(!user.isVerified)
+        return res.status(401).send({error:'Email is Not Verified'})
     req.user = user
     req.token = token    
     

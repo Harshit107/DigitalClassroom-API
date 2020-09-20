@@ -323,6 +323,21 @@ router.get('/class/people/admin',auth, async(req,res)=> {
 }) 
 
 
+router.delete('/class/delete/:id', async( req, res ) =>{
+
+    const mClass =await Class.findById(req.params.id);
+    if(!mClass)
+        return res.status(404).send( {error: 'Class not found'})
+    await mClass.deleteOne()
+    res.status(200).send("Ok")
+})
+
+
+
+
+
+
+
 //*****///**--------------Highlt Risky ---------********** */ */
 router.delete('/class', async (req, res) => {
     await Class.deleteMany()

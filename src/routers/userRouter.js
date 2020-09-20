@@ -2,11 +2,29 @@ const express = require('express')
 const router = new express.Router()
 const User = require('../model/User.js')
 const auth = require('../auth.js')
-const bcrypt = require('bcrypt')
+const sendEmail = require('../email/verifyEmail')
 
 
+router.get('/verify/email/:id',async(req,res)=> {
+
+    try {
+        
+    const id = req.params.id;
+    const user = await User.findOne( {_id : id } )
+    if(!user)
+        return res.status(404).send({error : 'Link expired'})
+    if(user.isVerified)
+        return res.status(200).send({message : 'User is already Verified'})
+    user.isVerified = true;
+    await user.save()
+    res.status(200).send({message : 'User Verified Successfully'})
+
+    } catch (error) {
+        res.status(404).send({error : 'User Id No Found'})  
+    }
 
 
+})
 
 //creating User --POST
 router.post('/users/create', async (req, res) => {
@@ -18,6 +36,7 @@ router.post('/users/create', async (req, res) => {
             res.status(403).send("No user Found")
         await createNewUser.save();
         const token = await createNewUser.generateToken()
+        await sendEmail(createNewUser.email,createNewUser._id)
         res.status(201).send({
             createNewUser,
             token
@@ -81,6 +100,33 @@ router.get('/profile', auth, async (req, res) => {
     }
 })
 
+
+// search user by name or email
+
+router.post('/users/search/email', auth, async(req,res)=>{
+
+    const search = req.body.email
+    const user = await User.findOne({ email: search})
+    if(!user)
+        return res.status(404).send({message:"User Not found"})
+    res.status(200).send(user)
+
+})
+router.post('/users/search/name', auth, async(req,res)=>{
+
+    const search = req.body.name
+    const user = await User.find({ name: {$regex : '^'+search}})
+    if(!user)
+        return res.status(404).send({message:"User Not found"})
+    res.status(200).send(user)
+
+})
+
+
+
+
+
+
 //  find all user Dev..
 router.get('/users', async (req, res) => {
     try {
@@ -100,6 +146,7 @@ router.get('/users', async (req, res) => {
     }
 })
 
+//populate
 
 
 

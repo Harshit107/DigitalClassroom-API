@@ -9,7 +9,7 @@ const authAdmin = async (req,res,next) => {
 
     try {
         const user = req.user
-        const classId = req.body.classId;
+        var classId = req.body.classId || req.header("classId");
         // const studentId = req.body.studentId;
         const getClass = await Class.findOne({ _id : classId, 'admins.admin' : user._id})
         if(!getClass)
@@ -19,7 +19,8 @@ const authAdmin = async (req,res,next) => {
         next()
 
     } catch (error) {
-        res.status(404).send(error)
+        console.log(error)
+        res.status(404).send({error})
     }
 
    
