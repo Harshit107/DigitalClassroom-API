@@ -7,14 +7,13 @@ async function verifyEamil(emailArray,_id) {
 
 	const smtpEndpoint = "email-smtp.us-west-2.amazonaws.com";
 	const port = 587;
-	//var emailArray = ['harshitkeshari199@gmail.com', 'harshit107.in@gmail.com']
 	const senderAddress = "StudyFy <contact@harshit-keshari.tech>";
 	var toAddresses = emailArray;
 
 	var ccAddresses = "cc-recipient0@example.com,cc-recipient1@example.com";
 	var bccAddresses = "bcc-recipient@example.com";
 	var subject = "Verify your Email";
-	var body_text = `Thank you for choosing StydyFy.\nPlease verify your Email-Address\n\n
+	var body_text = `Thank you for choosing StydyFy.\nPlease verify your Email-Address\n
 					${url}${_id}`;
 	var body_html = `<html>
 <head></head>

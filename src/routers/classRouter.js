@@ -338,11 +338,6 @@ router.delete('/class/delete/:id', async( req, res ) =>{
 
 
 
-//*****///**--------------Highlt Risky ---------********** */ */
-router.delete('/class', async (req, res) => {
-    await Class.deleteMany()
-    res.send("OK")
-})
 
 
 

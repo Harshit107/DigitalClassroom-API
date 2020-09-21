@@ -6,6 +6,11 @@ const { v4: uuidv4 } = require('uuid');
 const authAdmin = require('../authAdmin');
 const auth = require('../auth');
 const Class = require('../model/Class');
+const fs = require('fs');
+
+
+
+/*****    -------   for file upload  ---------    *******/
 
 let storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, 'uploads/') ,
@@ -19,7 +24,6 @@ let upload = multer({ storage, limits:{ fileSize: 100000 * 100 }, }).single('Fil
 
 router.post('/class/file/upload', auth,authAdmin, async(req,res)=> {
 
-  // await authAdmin(req,res,()=>{})
     upload(req, res, async (err) => {
         if (err) {
           return res.status(500).send({ error: err.message });
@@ -49,21 +53,68 @@ router.get('/class/file/read',auth , async(req,res)=> {
   if(!myClass)
     return res.status(404).send({error : "class not found"})
    await myClass.populate('files').execPopulate();
-  // console.log(myClass,files)
   res.send(myClass.files)
 })
 
 
+/*****    -------   for file delete  ---------    *******/
 
+//delete file with the id of the file
+// admin auth is require
+router.delete('/class/file/delete/:id',auth , authAdmin, async (req, res) => {
 
+  try {
+    const file = await File.findOne({
+      _id: req.params.id
+    })
+    if (!file) {
+      return res.status(404).send({
+        error: 'File Not Found'
+      })
+    }
+    const path = file.path
 
-
-router.get('/class/file/all',async(req,res)=> {
-
-  const allFile = await File.find()
-  res.send(allFile)
-
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.error(err)
+        return res.status(404).send({
+          error : err
+        })
+      }
+    })
+    await file.deleteOne()
+    res.send({
+      message : 'File Deleted Successfully'
+    })
+  } catch (error) {
+    res.status(404).send({
+      error
+    })
+  }
 })
+
+/*****    -------   for file delete  ---------    *******/
+
+//download file 
+router.get('/files/:uuid', async (req, res) => {
+
+  try {
+      const file = await File.findOne({
+          uuid: req.params.uuid
+      })
+      if (!file) {
+          return res.status(404).send({
+              error: 'File Not Found'
+          })
+      }
+      res.download(file.path)
+
+  } catch (error) {
+      res.status(404).send({error})
+  }
+})
+
+
 
 
 module.exports = router

@@ -10,7 +10,6 @@ const authAdmin = async (req,res,next) => {
     try {
         const user = req.user
         var classId = req.body.classId || req.header("classId");
-        // const studentId = req.body.studentId;
         const getClass = await Class.findOne({ _id : classId, 'admins.admin' : user._id})
         if(!getClass)
             return res.status(404).send({error:'Only admin can add user'})

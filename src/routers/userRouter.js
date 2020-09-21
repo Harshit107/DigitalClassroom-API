@@ -124,45 +124,7 @@ router.post('/users/search/name', auth, async(req,res)=>{
 
 
 
-
-
-
-//  find all user Dev..
-router.get('/users', async (req, res) => {
-    try {
-        const user = await User.find()
-        if (!user)
-            res.status(404).send({
-                message: "User not Found"
-            })
-        res.status(200).send(user)
-        console.log(user)
-
-    } catch (error) {
-        console.log(error)
-        res.status(403).send({
-            "Error": error
-        })
-    }
-})
-
 //populate
-
-
-
-
-// Auth check Dev
-router.post('/authcheck', auth, async (req, res) => {
-    res.status(200).send({
-        message: "OK"
-    })
-})
-
-//delete all user 
-router.delete('/users', async (req, res) => {
-    await User.deleteMany()
-    res.send(User)
-})
 
 
 module.exports = router
