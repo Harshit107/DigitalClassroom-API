@@ -1,5 +1,6 @@
 "use strict";
 const nodemailer = require("nodemailer");
+require('dotenv').config()
 
 async function verifyEamil(emailArray,_id) {
 
@@ -35,6 +36,8 @@ async function verifyEamil(emailArray,_id) {
 			pass: process.env.SMTP_PASSWORD_SENDGRID
 		}
 	});
+	console.log(process.env.SMTP_USERNAME_SENDGRID)
+	console.log(process.env.SMTP_PASSWORD_SENDGRID)
 
 	// Specify the fields in the email.
 	let mailOptions = {
