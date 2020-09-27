@@ -11,19 +11,20 @@ const fs = require('fs');
 
 
 /*****    -------   for file upload  ---------    *******/
-
 let storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, 'uploads/') ,
     filename: (req, file, cb) => {
         const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(file.originalname)}`;
               cb(null, uniqueName)
-    } ,
+    } 
 });
 
 let upload = multer({ storage, limits:{ fileSize: 100000 * 100 }, }).single('File');
 
 router.post('/class/file/upload', auth,authAdmin, async(req,res)=> {
 
+    const title = req.body.title
+    const description = req.body.description
     upload(req, res, async (err) => {
         if (err) {
           return res.status(500).send({ error: err.message });
@@ -35,15 +36,17 @@ router.post('/class/file/upload', auth,authAdmin, async(req,res)=> {
               size: req.file.size,
               senderId: req.user._id,
               classId: req.user.myClass._id,
+              title,
+              description,
               orignalname:req.file.originalname
           });
           const response = await file.save();
-          res.json({ file: `${process.env.APP_BASE_URL}/files/${response.uuid}` });
+          res.json({ file: `${process.env.APP_BASE_URL}/class/files/${response.uuid}` });
         });
 })
 
-/***      all Files related with the class      ***/
 
+/***      all Files related with the class      ***/
 router.get('/class/file/read',auth , async(req,res)=> {
 
   if(!req.body.classId)
@@ -93,10 +96,13 @@ router.delete('/class/file/delete/:id',auth , authAdmin, async (req, res) => {
   }
 })
 
+
+
+
 /*****    -------   for file delete  ---------    *******/
 
 //download file 
-router.get('/files/:uuid', async (req, res) => {
+router.get('/class/files/:uuid', async (req, res) => {
 
   try {
       const file = await File.findOne({

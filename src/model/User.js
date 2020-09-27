@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     },
     isVerified : {
         type : Boolean,
-        default:false
+        default:true
     },
     emailToken : {
         type:String
@@ -75,7 +75,6 @@ userSchema.pre('save', async function (next) {
 
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
-        console.log('Yes Changed')
     }
 
 

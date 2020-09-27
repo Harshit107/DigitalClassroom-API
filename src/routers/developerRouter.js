@@ -25,7 +25,7 @@ router.delete('/class', async (req, res) => {
 
 
 // Auth check Dev
-router.post('/authcheck', auth, async (req, res) => {
+router.get('/authcheck', auth, async (req, res) => {
     res.status(200).send({
         message: "OK"
     })
@@ -53,6 +53,25 @@ router.get('/users', async (req, res) => {
         console.log(error)
         res.status(403).send({
             "Error": error
+        })
+    }
+})
+
+///get all class dev
+router.get('/class', async (req, res) => {
+    try {
+        const cls = await Class.find()
+        if (!cls)
+            res.status(404).send({
+                error: "Class Not Found"
+            })
+        console.log(cls)
+        res.status(200).send(cls)
+
+    } catch (error) {
+        console.log(error)
+        res.status(406).send({
+            "error": error
         })
     }
 })

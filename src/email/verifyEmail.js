@@ -1,11 +1,25 @@
 "use strict";
 const nodemailer = require("nodemailer");
+require('dotenv').config()
 
 async function verifyEamil(emailArray,_id) {
 
+<<<<<<< HEAD
 	var url = 'http://digitalclassroom.heroku/verify/email/'
+||||||| 5d12b64
+	var url = 'http://localhost:3000/verify/email/'
+=======
+	var url = 'https://digitalclassroom.herokuapp.com/verify/email/'
+>>>>>>> digitalclassroom
 
+<<<<<<< HEAD
 	const smtpEndpoint = "smtp.sendgrid.net";
+||||||| 5d12b64
+	const smtpEndpoint = "email-smtp.us-west-2.amazonaws.com";
+=======
+	//const smtpEndpoint = "email-smtp.us-west-2.amazonaws.com";
+	const smtpEndpoint = "smtp.sendgrid.net";
+>>>>>>> digitalclassroom
 	const port = 587;
 	const senderAddress = "StudyFy <contact@harshit-keshari.tech>";
 	var toAddresses = emailArray;
@@ -13,13 +27,12 @@ async function verifyEamil(emailArray,_id) {
 	var ccAddresses = "cc-recipient0@example.com,cc-recipient1@example.com";
 	var bccAddresses = "bcc-recipient@example.com";
 	var subject = "Verify your Email";
-	var body_text = `Thank you for choosing StydyFy.\nPlease verify your Email-Address\n
-					${url}${_id}`;
+	var body_text = `Thank you for choosing StydyFy.\nPlease verify your Email-Address\n${url}${_id}`;
 	var body_html = `<html>
 <head></head>
 <body>
   <h1>Amazon SES Test (Nodemailer)</h1>
-  <p>This email was sent with <a href='https://aws.amazon.com/ses/'>Amazon SES</a>
+  <p>This email was sent with <a href=${url}${_id}>Amazon SES</a>
         using <a href='https://nodemailer.com'>Nodemailer</a> for Node.js.</p>
 </body>
 </html>`;
@@ -31,10 +44,12 @@ async function verifyEamil(emailArray,_id) {
 		port: port,
 		secure: false, // true for 465, false for other ports
 		auth: {
-			user: process.env.SMTP_USERNAME,
-			pass: process.env.SMTP_PASSWORD
+			user: process.env.SMTP_USERNAME_SENDGRID,
+			pass: process.env.SMTP_PASSWORD_SENDGRID
 		}
 	});
+	console.log(process.env.SMTP_USERNAME_SENDGRID)
+	console.log(process.env.SMTP_PASSWORD_SENDGRID)
 
 	// Specify the fields in the email.
 	let mailOptions = {
@@ -43,7 +58,7 @@ async function verifyEamil(emailArray,_id) {
 		subject: subject,
 
 		text: body_text,
-		// html: body_html,
+	//	 html: body_html,
 		// Custom headers for configuration set and message tags.
 		headers: {
 			'X-SES-MESSAGE-TAGS': tag0,
