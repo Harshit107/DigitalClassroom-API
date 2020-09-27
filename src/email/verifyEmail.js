@@ -4,22 +4,12 @@ require('dotenv').config()
 
 async function verifyEamil(emailArray,_id) {
 
-<<<<<<< HEAD
-	var url = 'http://digitalclassroom.heroku/verify/email/'
-||||||| 5d12b64
-	var url = 'http://localhost:3000/verify/email/'
-=======
-	var url = 'https://digitalclassroom.herokuapp.com/verify/email/'
->>>>>>> digitalclassroom
 
-<<<<<<< HEAD
-	const smtpEndpoint = "smtp.sendgrid.net";
-||||||| 5d12b64
-	const smtpEndpoint = "email-smtp.us-west-2.amazonaws.com";
-=======
+	// var url = 'http://localhost:3000/verify/email/'
+	var url = 'https://digitalclassroom.herokuapp.com/verify/email/'
+
 	//const smtpEndpoint = "email-smtp.us-west-2.amazonaws.com";
 	const smtpEndpoint = "smtp.sendgrid.net";
->>>>>>> digitalclassroom
 	const port = 587;
 	const senderAddress = "StudyFy <contact@harshit-keshari.tech>";
 	var toAddresses = emailArray;
@@ -48,8 +38,6 @@ async function verifyEamil(emailArray,_id) {
 			pass: process.env.SMTP_PASSWORD_SENDGRID
 		}
 	});
-	console.log(process.env.SMTP_USERNAME_SENDGRID)
-	console.log(process.env.SMTP_PASSWORD_SENDGRID)
 
 	// Specify the fields in the email.
 	let mailOptions = {
