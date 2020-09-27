@@ -36,6 +36,11 @@ router.post('/class/create', auth, async (req, res) => {
 })
 
 
+
+
+
+
+
 //add user to class 
 router.post('/class/join/id/:id', auth, async (req, res) => {
     try {
@@ -52,6 +57,7 @@ router.post('/class/join/id/:id', auth, async (req, res) => {
             joined: new Date()
         }
         checkClass.students = checkClass.students.concat(studentJoining)
+        checkClass.users = checkClass.users.concat({member : req.user._id})
         await checkClass.save();
         res.status(201).send({
             checkClass
@@ -64,6 +70,89 @@ router.post('/class/join/id/:id', auth, async (req, res) => {
         })
     }
 })
+
+
+
+router.post('/class/student/leave/id/:id', auth, async (req, res) => {
+    try {
+        const studentId = req.user._id
+        const classId = req.params.id
+        const checkClass = await Class.findById(classId)
+        if (!checkClass)
+            return res.status(404).send("Class Not Found")
+        
+
+        const exit = await Class.findOne( {_id : classId, 'users.member' : studentId })
+        if(!exit)
+            return res.status(406).send({messgae:'User not found in the class'})
+
+        const newClassUsers = checkClass.users.filter(member => {
+            return member.member != studentId.toString()
+        }) 
+        const newClassStudent = checkClass.students.filter(student => {
+            return student.student != studentId.toString()
+        })
+        checkClass.users = newClassUsers
+        checkClass.students = newClassStudent
+
+        await checkClass.save();
+        res.status(201).send({
+            checkClass
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(406).send({
+            "error": error
+        })
+    }
+})
+
+
+router.post('/class/admin/leave/id/:id', auth, authAdmin, async (req, res) => {
+    try {
+        const adminId = req.user._id
+        const classId = req.params.id
+        const checkClass = await Class.findById(classId)
+        if (!checkClass)
+            return res.status(404).send("Class Not Found")
+        
+
+        const exit = await Class.findOne( {_id : classId, 'users.member' : adminId })
+        if(!exit)
+            return res.status(406).send({messgae:'User not found in the class'})
+
+        const newClassUsers = checkClass.users.filter(member => {
+            return member.member != adminId.toString()
+        }) 
+        const newClassAdmin = checkClass.admins.filter(admin => {
+            return admin.admin != adminId.toString()
+        })
+        if(newClassAdmin.length === 0)
+            return res.status(406).send({error : "Class must have One admin"})
+        checkClass.users = newClassUsers
+        checkClass.admins = newClassAdmin
+
+        await checkClass.save();
+        res.status(201).send({
+            checkClass
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(406).send({
+            "error": error
+        })
+    }
+})
+
+
+
+
+
+
+
+
 
 //add student
 router.post('/class/add/student', auth, authAdmin, async (req,res)=> {
@@ -177,6 +266,49 @@ router.post('/class/add/admin/fromStudent', auth, authAdmin, async (req,res)=> {
     }
 })
 
+
+
+//remove student
+//make admin from student
+router.post('/class/student/remove', auth, authAdmin, async (req,res)=> {
+    try {
+
+        const studentId = req.body.to;
+        // const studentId = req.body.studentId; admin
+        const myClass = req.user.myClass
+        
+        // checking user if exist
+        const checkUser = await User.findById(studentId)
+
+        if(!checkUser)
+            return res.status(404).send('User Not found')
+
+        // checking user is present in that class or not 
+        const exist = myClass.users.filter((members)=> {
+            return members.member == studentId
+        })
+        
+        if(exist.length === 0)
+            return res.status(406).send({messgae:'User is not in class ! '}) 
+
+
+        const newClass = myClass.students.filter((student)=> {
+            return student.student != studentId
+        })        
+        myClass.students = newClass
+        await myClass.save()
+        res.send({myClass,message : 'User removed successfully'})
+
+    } catch (error) {
+        res.status(404).send(error)
+    }
+})
+
+
+
+
+
+
 //get class Info
 router.get('/class/id/:id', async (req, res) => {
     try {
@@ -275,24 +407,7 @@ router.get('/users/class',auth, async(req,res)=> {
 })
 
 
-///get all class dev
-router.get('/class', async (req, res) => {
-    try {
-        const cls = await Class.find()
-        if (!cls)
-            res.status(404).send({
-                error: "Class Not Found"
-            })
-        console.log(cls)
-        res.status(200).send(cls)
 
-    } catch (error) {
-        console.log(error)
-        res.status(406).send({
-            "error": error
-        })
-    }
-})
 
 router.get('/class/people',auth, async(req,res)=> {
 

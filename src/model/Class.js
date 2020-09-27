@@ -47,6 +47,14 @@ classSchema.virtual('files', {
     foreignField : 'classId'
 
 })
+classSchema.virtual('classworks', {
+    ref : 'ClassWork',
+    localField : '_id',
+    foreignField : 'classId'
+
+})
+
+
 classSchema.pre('deleteOne', { document: true}, async function(next){
     const myClass = this;
 

@@ -3,9 +3,10 @@ const nodemailer = require("nodemailer");
 
 async function verifyEamil(emailArray,_id) {
 
-	var url = 'http://localhost:3000/verify/email/'
+	var url = 'https://192.168.0.8:3000/verify/email/'
 
-	const smtpEndpoint = "email-smtp.us-west-2.amazonaws.com";
+	//const smtpEndpoint = "email-smtp.us-west-2.amazonaws.com";
+	const smtpEndpoint = "smtp.sendgrid.net";
 	const port = 587;
 	const senderAddress = "StudyFy <contact@harshit-keshari.tech>";
 	var toAddresses = emailArray;
@@ -13,13 +14,12 @@ async function verifyEamil(emailArray,_id) {
 	var ccAddresses = "cc-recipient0@example.com,cc-recipient1@example.com";
 	var bccAddresses = "bcc-recipient@example.com";
 	var subject = "Verify your Email";
-	var body_text = `Thank you for choosing StydyFy.\nPlease verify your Email-Address\n
-					${url}${_id}`;
+	var body_text = `Thank you for choosing StydyFy.\nPlease verify your Email-Address\n${url}${_id}`;
 	var body_html = `<html>
 <head></head>
 <body>
   <h1>Amazon SES Test (Nodemailer)</h1>
-  <p>This email was sent with <a href='https://aws.amazon.com/ses/'>Amazon SES</a>
+  <p>This email was sent with <a href=${url}${_id}>Amazon SES</a>
         using <a href='https://nodemailer.com'>Nodemailer</a> for Node.js.</p>
 </body>
 </html>`;
@@ -31,8 +31,8 @@ async function verifyEamil(emailArray,_id) {
 		port: port,
 		secure: false, // true for 465, false for other ports
 		auth: {
-			user: process.env.SMTP_USERNAME,
-			pass: process.env.SMTP_PASSWORD
+			user: process.env.SMTP_USERNAME_SENDGRID,
+			pass: process.env.SMTP_PASSWORD_SENDGRID
 		}
 	});
 
@@ -43,7 +43,7 @@ async function verifyEamil(emailArray,_id) {
 		subject: subject,
 
 		text: body_text,
-		// html: body_html,
+	//	 html: body_html,
 		// Custom headers for configuration set and message tags.
 		headers: {
 			'X-SES-MESSAGE-TAGS': tag0,
