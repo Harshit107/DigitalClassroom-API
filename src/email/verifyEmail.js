@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 
 async function verifyEamil(emailArray,_id) {
 
-	var url = 'https://192.168.0.8:3000/verify/email/'
+	var url = 'https://digitalclassroom.herokuapp.com/verify/email/'
 
 	//const smtpEndpoint = "email-smtp.us-west-2.amazonaws.com";
 	const smtpEndpoint = "smtp.sendgrid.net";
