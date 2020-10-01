@@ -22,6 +22,9 @@ const userSchema = new mongoose.Schema({
                 throw new Error("Enter Valid Email-ID")
         }
     },
+    phone : {
+        type:String
+    },
     isVerified : {
         type : Boolean,
         default:true
@@ -113,6 +116,18 @@ userSchema.methods.generateToken = async function () {
     return token
 
 }
+userSchema.pre('save',async function(next){
+    const user = this;
+    //console.log("At Pre Position")
+
+    if(user.isModified('password')){
+        user.password = await bcrypt.hash(user.password,8)
+        console.log('Yes Changed')
+    }
+
+
+    next()
+})
 
 const User = mongoose.model('User', userSchema)
 

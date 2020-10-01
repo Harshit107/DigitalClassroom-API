@@ -122,6 +122,36 @@ router.post('/users/search/name', auth, async(req,res)=>{
 
 })
 
+//password change
+router.patch("/users/update", auth, async (req, res) => {
+
+    const myId = req.user._id
+    const updates = Object.keys(req.body)
+    const allowed = ['password',"phone"]
+    const isValid = updates.every((update)=>allowed.includes(update))
+
+    if(!isValid)
+        return res.status(402).send({error:"Request Field can't be Changes"})
+        
+    try {
+
+        const user = await User.findById(myId)
+        updates.forEach((element) => {
+            user[element] = req.body[element]
+        });
+       //directly update without validate 
+      // const user =  await User.findByIdAndUpdate(myId,req.body,{ new:true, runValidators:true })
+      await user.save();
+
+        if (!user)
+            return res.status(404).send()
+        res.status(200).send(user)
+    } catch (err) {
+        res.status(403).send(err)
+    }
+})
+
+
 
 
 //populate
