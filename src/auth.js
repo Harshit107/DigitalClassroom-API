@@ -5,7 +5,8 @@ require('dotenv').config()
 const auth = async (req,res,next)=>{
 
     try {
-        
+    
+    
     const token = req.header('Authorization').replace('Bearer ', '');
 
     const decode = jwt.verify(token,process.env.JWT)
@@ -22,7 +23,7 @@ const auth = async (req,res,next)=>{
     next()
 
     } catch (error) {
-        res.status(401).send({error})
+        res.status(401).send({error:`Error ${error}`})
     }
 
 
