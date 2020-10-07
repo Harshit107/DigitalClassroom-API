@@ -38,6 +38,9 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: 7
     },
+    image :{
+        type:Buffer
+    },
     tokens: [{
         token: {
             required: true,

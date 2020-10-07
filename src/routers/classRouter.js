@@ -41,13 +41,13 @@ router.post('/class/create', auth, async (req, res) => {
 
 
 
-//add user to class 
+//Join user to class 
 router.post('/class/join/id/:id', auth, async (req, res) => {
     try {
         const classId = req.params.id
         const checkClass = await Class.findById(classId)
         if (!checkClass)
-            return res.status(404).send("Class Not Found")
+            return res.status(404).send({error:"Class Not Found"})
 
         const exit = await Class.findOne( {_id : classId, 'users.member' : req.user._id })
         if(exit)

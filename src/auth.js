@@ -23,7 +23,7 @@ const auth = async (req,res,next)=>{
     next()
 
     } catch (error) {
-        res.status(401).send({error:`Error ${error}`})
+        res.status(401).send({error:`Something Went Wrong`})
     }
 
 
