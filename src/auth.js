@@ -6,12 +6,8 @@ const auth = async (req,res,next)=>{
 
     try {
     
-    
     const token = req.header('Authorization').replace('Bearer ', '');
-
     const decode = jwt.verify(token,process.env.JWT)
-
-
     const user = await User.findOne( {_id:decode._id, 'tokens.token':token } )
     if(!user)
         return res.status(401).send({error:'Authentication Required'})
@@ -23,7 +19,7 @@ const auth = async (req,res,next)=>{
     next()
 
     } catch (error) {
-        res.status(401).send({error:`Something Went Wrong`})
+        res.status(401).send({error:`Something Went Wrong ${error}`})
     }
 
 

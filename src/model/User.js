@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
     },
     isVerified : {
         type : Boolean,
-        default:true
+        default:false
     },
     emailToken : {
         type:String
@@ -76,31 +76,26 @@ userSchema.virtual('classes', {
     localField: "_id",
     foreignField: 'users.member'
 })
+
 userSchema.pre('save', async function (next) {
     const user = this;
-
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
     }
-
-
     next()
 })
 
-userSchema.statics.findByCredentails = async (email, password) => {
-
-    const user = await User.findOne({
-        "email": email
-    })
-
-    if (!user)
+userSchema.statics.findByCredentails = async(email,password)=>{
+    
+    const user = await User.findOne({ "email": email })
+    
+    if(!user)
         throw new Error('No Email Found');
-
-    const checkPassworMatch = await bcrypt.compare(password, user.password)
-    if (!checkPassworMatch) {
+    
+    const checkPassworMatch = await bcrypt.compare(password,user.password)
+    if(!checkPassworMatch){
         throw new Error('Invalid Password')
     }
-    console.log(checkPassworMatch)
     return user
 }
 
@@ -119,19 +114,6 @@ userSchema.methods.generateToken = async function () {
     return token
 
 }
-userSchema.pre('save',async function(next){
-    const user = this;
-    //console.log("At Pre Position")
-
-    if(user.isModified('password')){
-        user.password = await bcrypt.hash(user.password,8)
-        console.log('Yes Changed')
-    }
-
-
-    next()
-})
-
 const User = mongoose.model('User', userSchema)
 
 module.exports = User
