@@ -10,6 +10,18 @@ const classSchema = new mongoose.Schema({
         trim : true,
         required : true
     },
+    section : {
+        type : String,
+        trim : true,
+    }, 
+    subject : {
+        type : String,
+        trim : true,
+    },
+    room : {
+        type : String,
+        trim : true,
+    },
     description : {
         type : String,
         trim : true,

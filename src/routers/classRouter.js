@@ -4,6 +4,9 @@ const Class = require('../model/Class.js')
 const auth = require('../auth.js')
 const authAdmin = require('../authAdmin.js')
 const User = require('../model/User.js')
+const mongoose = require('mongoose')
+var ObjectId = require('mongodb').ObjectID;
+
 
 
 
@@ -16,7 +19,9 @@ router.post('/class/create', auth, async (req, res) => {
         if (!createClass)
             res.status(403).send("No Class Created")
 
-        createClass.users = createClass.users.concat({member : req.user._id})
+        createClass.users = createClass.users.concat({
+            member: req.user._id
+        })
         // console.log(createClass)
         await createClass.save();
         createClass.admins = createClass.admins.concat({
@@ -44,27 +49,40 @@ router.post('/class/create', auth, async (req, res) => {
 //Join user to class 
 router.post('/class/join/id/:id', auth, async (req, res) => {
     try {
-        const classId = req.params.id
+        var classId = req.params.id
+        JSON.stringify(classId)
         const checkClass = await Class.findById(classId)
-        if (!checkClass)
-            return res.status(404).send({error:"Class Not Found"})
+        if (!checkClass){
+            console.log("no class exist")
+            return res.status(404).send({
+                error: "Class Not Found"
+            })
+        }
 
-        const exit = await Class.findOne( {_id : classId, 'users.member' : req.user._id })
-        if(exit)
-            return res.status(406).send({messgae:'User is already in the class'})
+        const exit = await Class.findOne({
+            _id: classId,
+            'users.member': req.user._id
+        })
+        if (exit){
+            return res.status(406).send({
+                message: 'User is already in the class'
+            })
+        }
         const studentJoining = {
             student: req.user._id,
             joined: new Date()
         }
         checkClass.students = checkClass.students.concat(studentJoining)
-        checkClass.users = checkClass.users.concat({member : req.user._id})
+        checkClass.users = checkClass.users.concat({
+            member: req.user._id
+        })
         await checkClass.save();
         res.status(201).send({
             checkClass
         })
 
     } catch (error) {
-        console.log(error)
+        console.log("at error Place :"+error.toString)
         res.status(406).send({
             "error": error
         })
@@ -72,23 +90,28 @@ router.post('/class/join/id/:id', auth, async (req, res) => {
 })
 
 
-
+//leave student
 router.post('/class/student/leave/id/:id', auth, async (req, res) => {
     try {
         const studentId = req.user._id
         const classId = req.params.id
         const checkClass = await Class.findById(classId)
         if (!checkClass)
-            return res.status(404).send("Class Not Found")
-        
+            return res.status(404).send({ message : "Class Not Found"})
 
-        const exit = await Class.findOne( {_id : classId, 'users.member' : studentId })
-        if(!exit)
-            return res.status(406).send({messgae:'User not found in the class'})
+
+        const exit = await Class.findOne({
+            _id: classId,
+            'users.member': studentId
+        })
+        if (!exit)
+            return res.status(406).send({
+                message : 'User not found in the class'
+            })
 
         const newClassUsers = checkClass.users.filter(member => {
             return member.member != studentId.toString()
-        }) 
+        })
         const newClassStudent = checkClass.students.filter(student => {
             return student.student != studentId.toString()
         })
@@ -103,7 +126,7 @@ router.post('/class/student/leave/id/:id', auth, async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(406).send({
-            "error": error
+            error : error
         })
     }
 })
@@ -116,20 +139,27 @@ router.post('/class/admin/leave/id/:id', auth, authAdmin, async (req, res) => {
         const checkClass = await Class.findById(classId)
         if (!checkClass)
             return res.status(404).send("Class Not Found")
-        
 
-        const exit = await Class.findOne( {_id : classId, 'users.member' : adminId })
-        if(!exit)
-            return res.status(406).send({messgae:'User not found in the class'})
+
+        const exit = await Class.findOne({
+            _id: classId,
+            'users.member': adminId
+        })
+        if (!exit)
+            return res.status(406).send({
+                messgae: 'User not found in the class'
+            })
 
         const newClassUsers = checkClass.users.filter(member => {
             return member.member != adminId.toString()
-        }) 
+        })
         const newClassAdmin = checkClass.admins.filter(admin => {
             return admin.admin != adminId.toString()
         })
-        if(newClassAdmin.length === 0)
-            return res.status(406).send({error : "Class must have One admin"})
+        if (newClassAdmin.length === 0)
+            return res.status(406).send({
+                error: "Class must have One admin"
+            })
         checkClass.users = newClassUsers
         checkClass.admins = newClassAdmin
 
@@ -155,68 +185,86 @@ router.post('/class/admin/leave/id/:id', auth, authAdmin, async (req, res) => {
 
 
 //add student
-router.post('/class/add/student', auth, authAdmin, async (req,res)=> {
+router.post('/class/add/student', auth, authAdmin, async (req, res) => {
 
     try {
         const studentId = req.body.to;
         // const studentId = req.body.studentId;
         const myClass = req.user.myClass
-        
+
         // checking user if exist
         const checkUser = await User.findById(studentId)
 
-        if(!checkUser)
+        if (!checkUser)
             return res.status(404).send('User Not found')
 
         // checking user is present in that call or not 
-        const exist = myClass.users.filter((members)=> {
+        const exist = myClass.users.filter((members) => {
             return members.member == studentId
         })
-        
-        if(exist.length !== 0)
-            return res.status(406).send({messgae:'User is already in the class'})
+
+        if (exist.length !== 0)
+            return res.status(406).send({
+                messgae: 'User is already in the class'
+            })
 
         // adding user to Users and student
-        myClass.users = myClass.users.concat({member : studentId})
-        myClass.students = myClass.students.concat({student : studentId})
+        myClass.users = myClass.users.concat({
+            member: studentId
+        })
+        myClass.students = myClass.students.concat({
+            student: studentId
+        })
         await myClass.save()
-        res.send({myClass,message : 'User added successfully'})
+        res.send({
+            myClass,
+            message: 'User added successfully'
+        })
 
     } catch (error) {
         res.status(404).send(error)
     }
 
-    
+
 
 })
 
 //add admin
-router.post('/class/add/admin', auth, authAdmin, async (req,res)=> {
+router.post('/class/add/admin', auth, authAdmin, async (req, res) => {
     try {
 
         const adminId = req.body.to;
         // const studentId = req.body.studentId;
         const myClass = req.user.myClass
-        
+
         // checking user if exist
         const checkUser = await User.findById(adminId)
 
-        if(!checkUser)
+        if (!checkUser)
             return res.status(404).send('User Not found')
 
         // checking user is present in that call or not 
-        const exist = myClass.users.filter((members)=> {
+        const exist = myClass.users.filter((members) => {
             return members.member == adminId
         })
-        
-        if(exist.length !== 0)
-            return res.status(406).send({messgae:'Admin is already in the class'})
+
+        if (exist.length !== 0)
+            return res.status(406).send({
+                messgae: 'Admin is already in the class'
+            })
 
         // adding user to Users and student
-        myClass.users = myClass.users.concat({member : adminId})
-        myClass.admins = myClass.admins.concat({admin : adminId})
+        myClass.users = myClass.users.concat({
+            member: adminId
+        })
+        myClass.admins = myClass.admins.concat({
+            admin: adminId
+        })
         await myClass.save()
-        res.send({myClass,message : 'User added successfully'})
+        res.send({
+            myClass,
+            message: 'User added successfully'
+        })
 
     } catch (error) {
         res.status(404).send(error)
@@ -224,42 +272,51 @@ router.post('/class/add/admin', auth, authAdmin, async (req,res)=> {
 })
 
 //make admin from student
-router.post('/class/add/admin/fromStudent', auth, authAdmin, async (req,res)=> {
+router.post('/class/add/admin/fromStudent', auth, authAdmin, async (req, res) => {
     try {
 
         const studentId = req.body.to;
         // const studentId = req.body.studentId; admin
         const myClass = req.user.myClass
-        
+
         // checking user if exist
         const checkUser = await User.findById(studentId)
 
-        if(!checkUser)
+        if (!checkUser)
             return res.status(404).send('User Not found')
 
         // checking user is present in that call or not 
-        const exist = myClass.users.filter((members)=> {
+        const exist = myClass.users.filter((members) => {
             return members.member == studentId
         })
-        
-        if(exist.length === 0)
-            return res.status(406).send({messgae:'User is not in class ! '}) 
 
-        const adminExist = myClass.admins.filter((admin)=> {
+        if (exist.length === 0)
+            return res.status(406).send({
+                messgae: 'User is not in class ! '
+            })
+
+        const adminExist = myClass.admins.filter((admin) => {
             return admin.admin == studentId
         })
-        
-        if(adminExist.length !== 0)
-            return res.status(406).send({messgae:'User is already an Admin'})
+
+        if (adminExist.length !== 0)
+            return res.status(406).send({
+                messgae: 'User is already an Admin'
+            })
 
         // adding user to Users and student        
-        myClass.admins = myClass.admins.concat({admin : studentId})
-        const newClass = myClass.students.filter((student)=> {
+        myClass.admins = myClass.admins.concat({
+            admin: studentId
+        })
+        const newClass = myClass.students.filter((student) => {
             return student.student != studentId
-        })        
-         myClass.students = newClass
+        })
+        myClass.students = newClass
         await myClass.save()
-        res.send({myClass,message : 'User Changed to Admin successfully'})
+        res.send({
+            myClass,
+            message: 'User Changed to Admin successfully'
+        })
 
     } catch (error) {
         res.status(404).send(error)
@@ -270,43 +327,44 @@ router.post('/class/add/admin/fromStudent', auth, authAdmin, async (req,res)=> {
 
 //remove student
 //make admin from student
-router.post('/class/student/remove', auth, authAdmin, async (req,res)=> {
+router.post('/class/student/remove', auth, authAdmin, async (req, res) => {
     try {
 
         const studentId = req.body.to;
         // const studentId = req.body.studentId; admin
         const myClass = req.user.myClass
-        
+
         // checking user if exist
         const checkUser = await User.findById(studentId)
 
-        if(!checkUser)
+        if (!checkUser)
             return res.status(404).send('User Not found')
 
         // checking user is present in that class or not 
-        const exist = myClass.users.filter((members)=> {
+        const exist = myClass.users.filter((members) => {
             return members.member == studentId
         })
-        
-        if(exist.length === 0)
-            return res.status(406).send({messgae:'User is not in class ! '}) 
+
+        if (exist.length === 0)
+            return res.status(406).send({
+                messgae: 'User is not in class ! '
+            })
 
 
-        const newClass = myClass.students.filter((student)=> {
+        const newClass = myClass.students.filter((student) => {
             return student.student != studentId
-        })        
+        })
         myClass.students = newClass
         await myClass.save()
-        res.send({myClass,message : 'User removed successfully'})
+        res.send({
+            myClass,
+            message: 'User removed successfully'
+        })
 
     } catch (error) {
         res.status(404).send(error)
     }
 })
-
-
-
-
 
 
 //get class Info
@@ -330,44 +388,55 @@ router.get('/class/id/:id', async (req, res) => {
 })
 
 //demote admin to student
-router.post('/class/add/student/fromAdmin', auth, authAdmin, async (req,res)=> {
+router.post('/class/add/student/fromAdmin', auth, authAdmin, async (req, res) => {
     try {
 
         const adminId = req.body.to;
         // const studentId = req.body.studentId; admin
         const myClass = req.user.myClass
-        
+
         // checking user if exist
         const checkUser = await User.findById(adminId)
 
-        if(!checkUser)
+        if (!checkUser)
             return res.status(404).send('User Not found')
 
         // checking user is present in that calass or not 
-        const exist = myClass.users.filter((members)=> {
+        const exist = myClass.users.filter((members) => {
             return members.member == adminId
         })
-        
-        if(exist.length === 0)
-            return res.status(406).send({messgae:'User is not in class ! '}) 
 
-        const studentExit = myClass.students.filter((students)=> {
+        if (exist.length === 0)
+            return res.status(406).send({
+                messgae: 'User is not in class ! '
+            })
+
+        const studentExit = myClass.students.filter((students) => {
             return students.student == adminId
         })
-        if(studentExit.length !== 0)
-            return res.status(406).send({messgae:'User is already an Student'})
-        if(myClass.admins.length <2 )
-            return res.status(406).send({error : "You cannot leave, class must have one admin! "})
+        if (studentExit.length !== 0)
+            return res.status(406).send({
+                messgae: 'User is already an Student'
+            })
+        if (myClass.admins.length < 2)
+            return res.status(406).send({
+                error: "You cannot leave, class must have one admin! "
+            })
 
         // adding user to Users and student        
-        myClass.students = myClass.students.concat({student : adminId})
+        myClass.students = myClass.students.concat({
+            student: adminId
+        })
 
-        const newClass = myClass.admins.filter((admins)=> {
+        const newClass = myClass.admins.filter((admins) => {
             return admins.admin != adminId
-        })        
-         myClass.admins = newClass
+        })
+        myClass.admins = newClass
         await myClass.save()
-        res.send({myClass,message : 'User Changed to Student successfully'})
+        res.send({
+            myClass,
+            message: 'User Changed to Student successfully'
+        })
 
     } catch (error) {
         res.status(404).send(error)
@@ -401,48 +470,79 @@ router.get('/class/id/:id', async (req, res) => {
 
 
 //get my class using populate
-router.get('/users/class',auth, async(req,res)=> {
-    await req.user.populate('classes').execPopulate();
-    res.send(req.user.classes)
+router.get('/users/classStudent', auth, async (req, res) => {
+   
+    try {
+
+        const myClassStudent = await Class.find({'students.student':req.user._id});
+        res.send(myClassStudent)
+
+    } catch (error) {
+        console.log({error})
+        res.status(404).send({error:"at Error"})
+    }
+
+})
+router.get('/users/classAdmin', auth, async (req, res) => {
+
+    try {
+        const myClassAdmin = await Class.find({'admins.admin':req.user._id})
+        // await req.user.populate({
+        //     path:'classes'
+        // }).execPopulate();
+        res.send(myClassAdmin)
+    } catch (error) {
+        console.log({error})
+        res.status(404).send({error})
+    }
+
 })
 
 
 
 
-router.get('/class/people',auth, async(req,res)=> {
+router.get('/class/people', auth, async (req, res) => {
 
     const classId = req.body.classId
-    const requestClass = await Class.findOne({ _id : classId })
-    if(!requestClass)
+    const requestClass = await Class.findOne({
+        _id: classId
+    })
+    if (!requestClass)
         return res.status(404).send('Class not found')
     res.send(requestClass.users)
 
-}) 
-router.get('/class/people/student',auth, async(req,res)=> {
+})
+router.get('/class/people/student', auth, async (req, res) => {
 
     const classId = req.body.classId
-    const requestClass = await Class.findOne({ _id : classId })
-    if(!requestClass)
+    const requestClass = await Class.findOne({
+        _id: classId
+    })
+    if (!requestClass)
         return res.status(404).send('Class not found')
     res.send(requestClass.students)
 
-}) 
-router.get('/class/people/admin',auth, async(req,res)=> {
+})
+router.get('/class/people/admin', auth, async (req, res) => {
 
     const classId = req.body.classId
-    const requestClass = await Class.findOne({ _id : classId })
-    if(!requestClass)
+    const requestClass = await Class.findOne({
+        _id: classId
+    })
+    if (!requestClass)
         return res.status(404).send('Class not found')
     res.send(requestClass.admins)
 
-}) 
+})
 
 
-router.delete('/class/delete/:id', async( req, res ) =>{
+router.delete('/class/delete/:id', async (req, res) => {
 
-    const mClass =await Class.findById(req.params.id);
-    if(!mClass)
-        return res.status(404).send( {error: 'Class not found'})
+    const mClass = await Class.findById(req.params.id);
+    if (!mClass)
+        return res.status(404).send({
+            error: 'Class not found'
+        })
     await mClass.deleteOne()
     res.status(200).send("Ok")
 })

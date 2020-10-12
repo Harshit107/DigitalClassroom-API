@@ -12,7 +12,7 @@ const auth = async (req,res,next)=>{
     if(!user)
         return res.status(401).send({error:'Authentication Required'})
     if(!user.isVerified)
-        return res.status(401).send({error:'Email is Not Verified'})
+        return res.send({error:'Email is Not Verified',status : 403})
     req.user = user
     req.token = token    
     
