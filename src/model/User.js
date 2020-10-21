@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     },
     phone : {
         type:String
+    }, 
+    enroll : {
+        type:Number,
+        default : 00
     },
     isVerified : {
         type : Boolean,
@@ -39,7 +43,7 @@ const userSchema = new mongoose.Schema({
         minlength: 7
     },
     image :{
-        type:Buffer
+        type:Buffer,
     },
     tokens: [{
         token: {

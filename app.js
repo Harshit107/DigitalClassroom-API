@@ -6,7 +6,8 @@ const classRouter = require('./src/routers/classRouter.js')
 const fileRouter = require('./src/routers/fileRouter.js')
 const classWorkRouter = require('./src/routers/classWorkRouter.js')
 const developerRouter = require('./src/routers/developerRouter.js')
-const ClassWork = require('./src/model/ClassWork.js')
+const attendanceRouter = require('./src/routers/attendanceRouter.js')
+// const ClassWork = require('./src/model/ClassWork.js')
 require("./src/db/mongoose.js")
 
 
@@ -18,6 +19,7 @@ app.use(classRouter)
 app.use(fileRouter)
 app.use(classWorkRouter)
 app.use(developerRouter)
+app.use(attendanceRouter)
 
 
 

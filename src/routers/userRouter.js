@@ -36,10 +36,13 @@ router.post('/users/create', async (req, res) => {
             res.status(403).send("No user Found")
         await createNewUser.save();
         const token = await createNewUser.generateToken()
+        const userId = createNewUser._id;
         await sendEmail(createNewUser.email,createNewUser._id)
         res.status(201).send({
             createNewUser,
-            token
+            token,
+            userId
+
         })
     } catch (error) {
         console.log(error)
@@ -54,9 +57,12 @@ router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentails(req.body.email, req.body.password);
         const token = await user.generateToken();
+        const userId = user._id;
+
         res.status(201).send({
             user,
-            token
+            token,
+            userId
         })
     } catch (error) {
         console.log(error)
@@ -65,6 +71,8 @@ router.post('/users/login', async (req, res) => {
         })
     }
 })
+
+//logout
 router.post('/users/logout', auth, async (req, res) => {
 
     //console.log(req.body.email+" "+ req.body.password)
@@ -112,6 +120,7 @@ router.post('/users/search/email', auth, async(req,res)=>{
     res.status(200).send(user)
 
 })
+
 router.post('/users/search/name', auth, async(req,res)=>{
 
     const search = req.body.name
@@ -127,7 +136,7 @@ router.patch("/users/update", auth, async (req, res) => {
 
     const myId = req.user._id
     const updates = Object.keys(req.body)
-    const allowed = ['password',"phone"]
+    const allowed = ['password',"phone","enroll"]
     const isValid = updates.every((update)=>allowed.includes(update))
 
     if(!isValid)

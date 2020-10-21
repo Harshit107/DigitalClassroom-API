@@ -3,7 +3,7 @@ require('dotenv').config()
 
 
 //connecting to mongoDB using mongoose
-mongoose.connect(process.env.MONGODB_URL,{
+mongoose.connect(process.env.MONGODB_URL_DEV,{
     useUnifiedTopology:true,
     useNewUrlParser:true,
     useCreateIndex:true

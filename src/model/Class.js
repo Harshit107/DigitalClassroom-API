@@ -10,6 +10,10 @@ const classSchema = new mongoose.Schema({
         trim : true,
         required : true
     },
+    createdBy : {
+        type : String,
+        trim : true
+    },
     section : {
         type : String,
         trim : true,
@@ -61,6 +65,12 @@ classSchema.virtual('files', {
 })
 classSchema.virtual('classworks', {
     ref : 'ClassWork',
+    localField : '_id',
+    foreignField : 'classId'
+
+})
+classSchema.virtual('attendanceRecord', {
+    ref : 'Attendance',
     localField : '_id',
     foreignField : 'classId'
 
