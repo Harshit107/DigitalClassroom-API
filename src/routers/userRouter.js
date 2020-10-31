@@ -56,8 +56,15 @@ router.post('/users/login', async (req, res) => {
     //console.log(req.body.email+" "+ req.body.password)
     try {
         const user = await User.findByCredentails(req.body.email, req.body.password);
+        
         const token = await user.generateToken();
+        const deviceToken = req.body.deviceToken;
+        if(deviceToken){
+            user.deviceToken = deviceToken
+            user.save();
+        }
         const userId = user._id;
+        
 
         res.status(201).send({
             user,
@@ -136,7 +143,7 @@ router.patch("/users/update", auth, async (req, res) => {
 
     const myId = req.user._id
     const updates = Object.keys(req.body)
-    const allowed = ['password',"phone","enroll"]
+    const allowed = ['password',"phone","enroll","image"]
     const isValid = updates.every((update)=>allowed.includes(update))
 
     if(!isValid)

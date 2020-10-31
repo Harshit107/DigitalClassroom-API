@@ -42,8 +42,12 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: 7
     },
+    deviceToken : {
+        type : String
+    }
+    ,
     image :{
-        type:Buffer,
+        type:String,
     },
     tokens: [{
         token: {

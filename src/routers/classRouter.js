@@ -5,7 +5,6 @@ const auth = require('../auth.js')
 const authAdmin = require('../authAdmin.js')
 const User = require('../model/User.js')
 const mongoose = require('mongoose')
-var ObjectId = require('mongodb').ObjectID;
 
 
 //creating class --POST
@@ -13,23 +12,27 @@ router.post('/class/create', auth, async (req, res) => {
     try {
 
         const {className, description} = req.body
-        const createdBy = req.user.name
+        const createrName = req.user.name
+        const createrImage = req.user.image == undefined ? "default" : req.user.image;
 
         const createClass = new Class({
             className,
             description,
-            createdBy
+            createrName,
+            createrImage
         })
         if (!createClass)
             res.status(403).send("No Class Created")
 
         createClass.users = createClass.users.concat({
-            member: req.user._id
+            member: req.user._id,
         })
         // console.log(createClass)
         await createClass.save();
         createClass.admins = createClass.admins.concat({
-            admin: req.user._id
+            admin: req.user._id,
+            deviceToken : req.user.deviceToken
+
         })
         await createClass.save()
         res.status(201).send({
@@ -94,7 +97,8 @@ router.post('/class/join/id/:id', auth, async (req, res) => {
         }
         const studentJoining = {
             student: req.user._id,
-            joined: new Date()
+            joined: new Date(),
+            deviceToken : req.user.deviceToken
         }
         checkClass.students = checkClass.students.concat(studentJoining)
         checkClass.users = checkClass.users.concat({
@@ -231,7 +235,8 @@ router.post('/class/add/student', auth, authAdmin, async (req, res) => {
             member: studentId
         })
         myClass.students = myClass.students.concat({
-            student: studentId
+            student: studentId,
+            deviceToken : req.user.deviceToken
         })
         await myClass.save()
         res.send({
@@ -276,7 +281,9 @@ router.post('/class/add/admin', auth, authAdmin, async (req, res) => {
             member: adminId
         })
         myClass.admins = myClass.admins.concat({
-            admin: adminId
+            admin: adminId,
+            deviceToken : req.user.deviceToken
+
         })
         await myClass.save()
         res.send({
@@ -324,7 +331,9 @@ router.post('/class/add/admin/fromStudent', auth, authAdmin, async (req, res) =>
 
         // adding user to Users and student        
         myClass.admins = myClass.admins.concat({
-            admin: studentId
+            admin: studentId,
+            deviceToken : req.user.deviceToken
+
         })
         const newClass = myClass.students.filter((student) => {
             return student.student != studentId
@@ -439,7 +448,9 @@ router.post('/class/add/student/fromAdmin', auth, authAdmin, async (req, res) =>
 
         // adding user to Users and student        
         myClass.students = myClass.students.concat({
-            student: adminId
+            student: adminId,
+            deviceToken : req.user.deviceToken
+
         })
 
         const newClass = myClass.admins.filter((admins) => {
@@ -476,7 +487,6 @@ router.get('/class/id/:id', async (req, res) => {
         })
     }
 })
-
 
 
 //get my class using populate
@@ -610,6 +620,7 @@ router.get('/class/people/student', auth, async (req, res) => {
     res.send(requestClass.students)
 
 })
+
 
 router.get('/class/people/admin', auth, async (req, res) => {
 

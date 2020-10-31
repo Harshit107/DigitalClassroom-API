@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const File = require('../model/File')
 const fs = require('fs')
 
 
@@ -9,6 +8,12 @@ const classSchema = new mongoose.Schema({
         type : String,
         trim : true,
         required : true
+    },
+    createrName : {
+        type : String,
+    },
+    createrImage : {
+        type : String,
     },
     createdBy : {
         type : String,
@@ -41,6 +46,9 @@ const classSchema = new mongoose.Schema({
         {
             type:mongoose.Schema.Types.ObjectId,
             trim:true
+        },
+        deviceToken : {
+            type : String
         } 
     }],
     students : [{
@@ -50,18 +58,15 @@ const classSchema = new mongoose.Schema({
         joined : {
             type: Date, 
             default: Date.now
+        },
+        deviceToken : {
+            type : String
         }
     }]
 
 },
 {
     timestamps : true
-})
-classSchema.virtual('files', {
-    ref : 'File',
-    localField : '_id',
-    foreignField : 'classId'
-
 })
 classSchema.virtual('classworks', {
     ref : 'ClassWork',
@@ -71,6 +76,18 @@ classSchema.virtual('classworks', {
 })
 classSchema.virtual('attendanceRecord', {
     ref : 'Attendance',
+    localField : '_id',
+    foreignField : 'classId'
+
+})
+classSchema.virtual('streamData', {
+    ref : 'Stream',
+    localField : '_id',
+    foreignField : 'classId'
+
+})
+classSchema.virtual('assignmentData', {
+    ref : 'Assignment',
     localField : '_id',
     foreignField : 'classId'
 

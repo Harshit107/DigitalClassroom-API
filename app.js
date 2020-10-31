@@ -1,13 +1,12 @@
 const express = require('express')
 const app = express()
-// const path = require('path')
 const userRouter = require('./src/routers/userRouter.js')
 const classRouter = require('./src/routers/classRouter.js')
-const fileRouter = require('./src/routers/fileRouter.js')
-const classWorkRouter = require('./src/routers/classWorkRouter.js')
+const assignmentRouter = require('./src/routers/assignmentRouter.js')
 const developerRouter = require('./src/routers/developerRouter.js')
 const attendanceRouter = require('./src/routers/attendanceRouter.js')
-// const ClassWork = require('./src/model/ClassWork.js')
+const streamRouter = require('./src/routers/streamRouter.js')
+const notificationRouter = require('./src/routers/notificationRouter.js')
 require("./src/db/mongoose.js")
 
 
@@ -16,10 +15,11 @@ app.use(express.json())
 
 app.use(userRouter)
 app.use(classRouter)
-app.use(fileRouter)
-app.use(classWorkRouter)
+app.use(assignmentRouter)
 app.use(developerRouter)
 app.use(attendanceRouter)
+app.use(streamRouter)
+app.use(notificationRouter)
 
 
 

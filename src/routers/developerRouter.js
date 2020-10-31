@@ -1,4 +1,3 @@
-const File = require('../model/File')
 const Class = require('../model/Class')
 const User = require('../model/User')
 const router = require('express').Router()
