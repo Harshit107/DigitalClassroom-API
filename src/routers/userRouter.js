@@ -3,7 +3,7 @@ const router = new express.Router()
 const User = require('../model/User.js')
 const auth = require('../auth.js')
 const sendEmail = require('../email/verifyEmail')
-
+const path = require('path')
 
 router.get('/verify/email/:id',async(req,res)=> {
 
@@ -11,15 +11,27 @@ router.get('/verify/email/:id',async(req,res)=> {
         
     const id = req.params.id;
     const user = await User.findOne( {_id : id } )
+    const htmlPath = path.join(__dirname, '../../');
+
     if(!user)
         return res.status(404).send({error : 'Link expired'})
     if(user.isVerified)
-        return res.status(200).send({message : 'User is already Verified'})
+        return res.sendFile(htmlPath + 'public/email_already_verified.html');  
     user.isVerified = true;
     await user.save()
-    res.status(200).send({message : 'User Verified Successfully'})
 
+
+    try {
+         res.sendFile(htmlPath + 'public/email_verified.html');   
     } catch (error) {
+        console.log({error})
+        res.status(200).send({message : 'User Verified Successfully'})
+
+    }
+    
+    // 
+    } catch (error) {
+        const htmlPath = path.join(__dirname, '../../');
         res.status(404).send({error : 'User Id No Found'})  
     }
 
@@ -31,6 +43,12 @@ router.post('/users/create', async (req, res) => {
     const user = req.body
 
     try {
+
+        const fUser = await User.find({email : req.body.email})
+        if(fUser.length > 0 )
+            return res.status(404).send({error : "User is already registered with us"})
+
+
         const createNewUser = new User(user)
         if (!createNewUser)
             res.status(403).send("No user Found")
