@@ -4,11 +4,11 @@ require('dotenv').config()
 const appname = 'DigitalClassroom'
 
 
-const sendMail = async function (email) {
+const sendMail = async function (email, message) {
 
     const fromEmail = process.env.EMAIL;
     const password = process.env.PASSWORD;
-    const message = 'You Have new Post from Digital Classroom'
+    message = message || 'You Have new Post from Digital Classroom'
     let mailTransporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -26,7 +26,7 @@ const sendMail = async function (email) {
 
     mailTransporter.sendMail(mailDetails, function (err, data) {
         if (err) {
-            console.log('Error Occurs');
+            console.log('Error Occurs'+err);
         } else {
             console.log('Email sent successfully');
         }

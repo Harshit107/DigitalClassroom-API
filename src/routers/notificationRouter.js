@@ -39,7 +39,7 @@ router.post('/class/mail/send', auth, async (req, res) => {
 
         }
         const allEmailId = await findEmail(alluserId);
-        await sendEmail(allEmailId)
+        await sendEmail(allEmailId,req.body.message)
         // console.log(allEmailId)
 
         res.status(200).send({
@@ -148,7 +148,7 @@ router.post('/class/send/notification/topic/send',auth ,async (req, res) => {
             color : "#434761"
         },
         data : {
-
+            link : req.body.link
         }
       };
       

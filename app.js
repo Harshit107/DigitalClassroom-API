@@ -5,6 +5,7 @@ const classRouter = require('./src/routers/classRouter.js')
 const assignmentRouter = require('./src/routers/assignmentRouter.js')
 const developerRouter = require('./src/routers/developerRouter.js')
 const attendanceRouter = require('./src/routers/attendanceRouter.js')
+const videCallRouter = require('./src/routers/videoCallRouter.js')
 const streamRouter = require('./src/routers/streamRouter.js')
 const sendMail = require('./src/email/verifyEmail')
 const notificationRouter = require('./src/routers/notificationRouter.js')
@@ -21,6 +22,9 @@ app.use(developerRouter)
 app.use(attendanceRouter)
 app.use(streamRouter)
 app.use(notificationRouter)
+app.use(videCallRouter);
+
+
 
 
 

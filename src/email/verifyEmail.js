@@ -40,9 +40,8 @@ let mailDetails = {
              <p style="font-size: 18px;">Hi, Only verified accout have access to use DigitalClassroom feature\n
              click the button below to verify your email address.</p>
              <a href=${url+_id} style=" text-decoration: none; color: white; font-size : 20px; padding: 7px 20px; background-color: #75c0f1;">Verify Now</a>
-    
+             <p>OR\nVerify through link\n${url+_id} </p>    
         </div>
-    
         </body>
         </html>`
 
