@@ -36,10 +36,9 @@ router.post('/class/videoCall/create', auth, async (req, res) => {
 
 });
 
-router.get('/videoCall/meeting/code/:id', async function (req, res) {
+router.get('/videoCall/meeting/code/:id',auth, async function (req, res) {
 
     try {
-
         const videoId = req.params.id;
         console.log(videoId);
         if (videoId.length != 24)
