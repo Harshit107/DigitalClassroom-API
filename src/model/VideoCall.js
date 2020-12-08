@@ -18,7 +18,32 @@ const videoCallSchema = new mongoose.Schema({
     },
     createrId : {
         type : mongoose.Schema.Types.ObjectId
+    },
+    kickOut : {
+        type : Boolean,
+        default : true
+    },
+    chat : {
+        type : Boolean,
+        default : true
+    },
+    password : {
+        type : Boolean,
+        default : true
+    },
+    raiseHand : {
+        type : Boolean,
+        default : true
+    },
+    videoSharing : {
+        type : Boolean,
+        default : true
+    },
+    timer : {
+        type : Boolean,
+        default : true
     }
+
 
 },
 {
