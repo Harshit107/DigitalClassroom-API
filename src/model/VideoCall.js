@@ -42,6 +42,9 @@ const videoCallSchema = new mongoose.Schema({
     timer : {
         type : Boolean,
         default : true
+    },
+    className : {
+        type : String,
     }
 
 

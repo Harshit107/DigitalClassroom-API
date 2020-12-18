@@ -12,6 +12,7 @@ const notificationRouter = require('./src/routers/notificationRouter.js')
 require("./src/db/mongoose.js")
 
 
+
 const PORT = process.env.PORT || 3000;
 app.use(express.json())
 
@@ -25,10 +26,8 @@ app.use(notificationRouter)
 app.use(videCallRouter);
 
 
-
-
-
-
+//             www.google.com/
+//             localhost:3000/emmanul
 
 app.listen(PORT, () => {
     console.log(`Server is on port ${PORT}`);
