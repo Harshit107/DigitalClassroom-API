@@ -7,7 +7,8 @@ const developerRouter = require('./src/routers/developerRouter.js')
 const attendanceRouter = require('./src/routers/attendanceRouter.js')
 const videCallRouter = require('./src/routers/videoCallRouter.js')
 const streamRouter = require('./src/routers/streamRouter.js')
-const sendMail = require('./src/email/verifyEmail')
+const sendMail = require('./src/email/sendMail')
+const path = require('path')
 const notificationRouter = require('./src/routers/notificationRouter.js')
 require("./src/db/mongoose.js")
 
@@ -15,6 +16,10 @@ require("./src/db/mongoose.js")
 
 const PORT = process.env.PORT || 3000;
 app.use(express.json())
+
+// app.use(express.static(__dirname + '/public'));
+
+
 
 app.use(userRouter)
 app.use(classRouter)
@@ -25,9 +30,15 @@ app.use(streamRouter)
 app.use(notificationRouter)
 app.use(videCallRouter);
 
+// app.get('/sendmail', async (req, res) => {
+//     await sendMail('harshit107.in@gmail.com')
+//     res.send('<h1>Done</h1>')
+// })
+
 
 //             www.google.com/
 //             localhost:3000/emmanul
+
 
 app.listen(PORT, () => {
     console.log(`Server is on port ${PORT}`);

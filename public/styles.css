@@ -1,0 +1,92 @@
+/* defining the variable in css */
+:root {
+    --success-color :green;
+    --error-color : rgb(231, 96, 96);
+}
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    
+}
+body {
+    display: flex;  
+    font-family: 'Open Sans',sans-serif;
+   background: url('/public/bg.jpg');
+   object-fit: cover;
+   background-size: 100% 100%;
+   background-position : center;
+   background-repeat : no-repeat;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0px;
+}
+.container {
+    background-color: white;
+    width: 400px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .3);
+    border-radius: 5px;
+}
+h2 {
+    margin: 0px;
+    margin: 0 0 20px;
+}
+.form {
+    padding: 30px 40px;
+}
+.form-control {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    position: relative;
+}
+.form-control label {
+    margin-bottom: 5px;
+    display: block;
+    color: #777;
+}
+.form-control input {
+margin: 0px;;
+ border: 2px solid #f0f0f0;
+ display: block;
+ width: 100%;
+ padding: 10px;
+ font-size: 14px;
+}
+
+.form-control input:focus {
+    outline: 0px;
+    border: 2px solid #777;
+    border-radius: 20px;
+}
+.form-control.success input {
+    border: 2px solid var(--success-color);
+}
+.form-control.error input {
+    border: 2px solid var(--error-color);
+}
+.form-control small {
+    display: block;
+    color: var(--error-color);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    visibility: hidden;
+}
+.form-control.error small {
+    visibility: visible;
+}
+.form button {
+    background-color: #3498db;
+    border : 2px solid ;
+    border-radius: 2px;
+    color: white;
+    display: block;
+    font-size: 16px;
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+}
+button {
+    cursor: pointer;
+}

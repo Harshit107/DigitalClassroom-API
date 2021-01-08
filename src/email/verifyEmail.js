@@ -4,7 +4,7 @@ require('dotenv').config()
 const appname = 'DigitalClassroom'
 
 
-const sendMail = async function(email,_id=""){
+const sendMail = async function(email,_id="",preHtml){
 
 	const fromEmail = process.env.EMAIL;
 	const password = process.env.PASSWORD;
@@ -24,7 +24,7 @@ let mailDetails = {
     to: email, 
     subject: `Email Verification`, 
     text: `Verify your mail \n${url+_id}`,
-    html : `<!DOCTYPE html>
+    html : preHtml ||  `<!DOCTYPE html>
             <html lang="en">
             <head>
         <meta charset="UTF-8">

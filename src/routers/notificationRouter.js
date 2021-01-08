@@ -27,19 +27,60 @@ router.post('/class/mail/send', auth, async (req, res) => {
         const alluserId = classUser.users
 
         const findEmail = async (alluserId) => {
-
             var userMail = [];
-
             for (let i = 0; i < alluserId.length; i++) {
                 let userDetail = await User.findById(alluserId[i].member)
                 userMail.push(userDetail.email)
-
             }
             return userMail
-
         }
         const allEmailId = await findEmail(alluserId);
-        await sendEmail(allEmailId,req.body.message)
+
+        //----------------------------------------------------------------
+
+
+        const preHtml = `
+        <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Post</title>
+    </head>
+    <body style=" width : 100%;">
+    <div style="margin-top: 100px;">
+        <div  style=" max-width: 90%; margin: 0 auto;">
+            <div style="background:blue; padding: 20px 0px; ">
+                <div style="text-align: center;">
+                    <img src="https://www.digitalclassroom.ml/assets/favicon-light.png" width="60px">
+                    <p style=" margin:0;padding-top: 10px;font-size: 20px;color : white;">Digital-Classroom</p>
+                </div>
+            </div>
+            <div  style="padding : 10px 20px; border : 2px solid  rgb(34, 74, 133);border-top: 10px solid rgb(34, 74, 133); background-color : white;">
+                <div class="into">
+                    <h3>Hi Everyone,</h3>
+                    <p> ${req.user.name} posted a new ${req.body.type || 'post'} in <span class="classname" style="color : blue; font-size :18px;"> ${classUser.className}</span> </p>
+                </div>
+
+                <div class="message-body"style=" display: flex;align-items :center; padding : 10px; text-align: center;">
+                    <img src=${req.user.image || "https://www.searchpng.com/wp-content/uploads/2019/02/Samsung-Message-icon-1024x941.png"} width="60px" height =" 60px" style ="border-radius: 50%; margin-right: 20px;"                            >
+                    <div class="message-body__containt" style="flex-grow: 1;">
+                        <p style = "padding : 5px 0;margin : 0 0 10px 0;">${req.body.message}</p>
+                        <a style ="background : blue;color :white;padding : 5px 15px;cursor: pointer;text-decoration: none;" href=${req.body.link || "https://digitalclassroom.ml"}>Open App</a>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </body>
+    </html>`
+      
+
+
+        //----------------------------------------------------------------
+
+
+        await sendEmail(allEmailId,req.body.message, preHtml)
         // console.log(allEmailId)
 
         res.status(200).send({

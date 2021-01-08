@@ -551,7 +551,6 @@ router.post('/class/people', auth, async (req, res) => {
         const findAdmin = (async () => {
             let newAdmin = [];
             for (let i = 0; i < requestClass.admins.length; i++) {
-
                 const admins = requestClass.admins[i];
                 const {
                     name,

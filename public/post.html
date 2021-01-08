@@ -1,0 +1,147 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post</title>
+</head>
+<body>
+    
+    <div class="all">
+        <div class="container">
+            <div class="head">
+                <div class="main">
+                    <img src="https://www.digitalclassroom.ml/assets/favicon-light.png" width="60px">
+                    <p>Digital-Classroom</p>
+                </div>
+            </div>
+            <div class="message">
+                <div class="into">
+                    <h3>Hi Everyone,</h3>
+                    <p>Teacher name posted a new assignment in<span class="classname"> classroom name</span> </p>
+                </div>
+
+                <div class="message-body">
+                    <img src="/public/message.svg" >
+                    <div class="message-body__containt">
+                        <p>All please find</p>
+                        <a class="button" href="https://digitalclassroom.ml">Open App</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .body {
+            background : rgb(245, 243, 243);
+            height: 100vh;
+            width : 100%;
+           
+        }
+        .all {
+            
+            margin-top: 1000px;
+        }
+        .container {
+            max-width: 70%;
+            margin: 0 auto;
+        }
+        .head {
+            background : blue;
+            padding: 20px 0px;
+            display : flex;
+            text-align: center;
+            justify-content:center;
+        }
+        .main {
+            width: fit-content;
+        }
+        .main>p {
+            margin:0;
+            padding-top: 10px;
+            font-size: 20px;
+            color : white;
+        }
+
+        .message {
+            padding : 10px 20px;
+            border : 2px solid  rgb(34, 74, 133);
+            border-top: 10px solid rgb(34, 74, 133);
+            background-color : white;
+        }
+        .classname {
+            color : blue;
+            font-size :20px;
+        }
+        .message-body {
+            display: flex;
+            align-items :center;
+            padding : 10px;
+            text-align: center;
+        }
+        .message-body img {
+            border-radius: 50%;
+            height: 60px;
+            width: 60px;
+            margin-right: 20px;
+        }
+        .message-body p {
+            padding : 5px 0;
+            margin : 0 0 10px 0;
+        }
+        .button {
+            background : blue;
+            color :white;
+            padding : 5px 15px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .button:hover {
+            background : rgb(48, 124, 224);
+            color :white;
+            cursor: pointer;
+        }
+        .message-body__containt {
+            flex-grow: 1;
+        }
+    </style>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post</title>
+</head>
+<body style="height: 100vh; width : 100%;">
+    <div style="margin-top: 100px;">
+        <div  style=" max-width: 90%; margin: 0 auto;">
+            <div  style="background:blue; padding: 20px 0px; ">
+                <div style="text-align: center;">
+                    <img src="https://www.digitalclassroom.ml/assets/favicon-light.png" width="60px">
+                    <p style=" margin:0;padding-top: 10px;font-size: 20px;color : white;">Digital-Classroom</p>
+                </div>
+            </div>
+            <div  style="padding : 10px 20px; border : 2px solid  rgb(34, 74, 133);border-top: 10px solid rgb(34, 74, 133); background-color : white;">
+                <div class="into">
+                    <h3>Hi Everyone,</h3>
+                    <p> ${req.user.name} posted a new ${req.body.type || 'post'} in <span class="classname" style="color : blue; font-size :20px;"> ${classUser.className}</span> </p>
+                </div>
+
+                <div class="message-body"style=" display: flex;align-items :center; padding : 10px; text-align: center;">
+                    <img src="/public/message.svg"style =" border-radius: 50%;height: 60px;width: 60px;margin-right: 20px;"                            >
+                    <div class="message-body__containt" style="flex-grow: 1;">
+                        <p style = "padding : 5px 0;margin : 0 0 10px 0;">${req.body.message}</p>
+                        <a style ="background : blue;color :white;padding : 5px 15px;cursor: pointer;text-decoration: none;" href="https://digitalclassroom.ml">Open App</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
