@@ -30,10 +30,10 @@ app.use(streamRouter)
 app.use(notificationRouter)
 app.use(videCallRouter);
 
-app.get('/sendmail', async (req, res) => {
-    await sendMail(['harshitkeshari1999@gmail.com','harshituem@gmail.com'])
-    res.send('<h1>Done</h1>')
-})
+// app.get('/sendmail', async (req, res) => {
+//     await sendMail(['harshitkeshari1999@gmail.com','harshituem@gmail.com'])
+//     res.send('<h1>Done</h1>')
+// })
 
 
 //             www.google.com/  
