@@ -1,12 +1,15 @@
 "use strict";
-// const nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer");
 require('dotenv').config()
 const appname = 'DigitalClassroom'
-const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+// const sgMail = require('@sendgrid/mail')
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 
 const sendMail = async function(email,_id="",preHtml){
+
+    const fromEmail =process.env.SENDINBLUE_EMAIL;
+    const password = process.env.SENDINBLUE_PASSWORD;
 
     var url = 'https://digitalclassroom.herokuapp.com/verify/email/'
     
@@ -31,20 +34,39 @@ const sendMail = async function(email,_id="",preHtml){
         </body>
         </html>`
     
+        let mailTransporter = nodemailer.createTransport({ 
+            host: 'smtp-relay.sendinblue.com',
+            port: 587,
+            auth: { 
+                user: fromEmail, 
+                pass: password
+            } 
+        }); 
+          
+    
     const msg = {
         to: email, // Change to your recipient
-        from: 'digitalclassroom@harshit-keshari.tech', // Change to your verified sender
+        from: 'digitalclassroom@imharshit.tech', // Change to your verified sender
         subject: `Verify Your Email for ${appname}`,
         text:  message,
         html: html,
-      }
-
-    sgMail.send(msg).then(() => {
-        console.log('Email sent')
-        })
-      .catch((error) => {
-        console.error(error)
-    })
+    }
     
+      mailTransporter.sendMail(msg, function (err, data) {
+        if (err) {
+            console.log('Error Occurs'+err);
+        } else {
+            console.log('Email sent successfully');
+        }
+    });
+    // sgMail.send(msg).then(() => {
+    //     console.log('Email sent')
+    //     })
+    //   .catch((error) => {
+    //     console.error(error)
+    // })
+   
 }
 module.exports = sendMail
+
+

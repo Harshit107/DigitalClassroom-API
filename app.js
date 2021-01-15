@@ -30,13 +30,13 @@ app.use(streamRouter)
 app.use(notificationRouter)
 app.use(videCallRouter);
 
-// app.get('/sendmail', async (req, res) => {
-//     await sendMail('harshit107.in@gmail.com')
-//     res.send('<h1>Done</h1>')
-// })
+app.get('/sendmail', async (req, res) => {
+    await sendMail(['harshitkeshari1999@gmail.com','harshituem@gmail.com'])
+    res.send('<h1>Done</h1>')
+})
 
 
-//             www.google.com/
+//             www.google.com/  
 //             localhost:3000/emmanul
 
 
