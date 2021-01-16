@@ -378,7 +378,12 @@ router.post('/class/student/remove', auth, authAdmin, async (req, res) => {
         const newClass = myClass.students.filter((student) => {
             return student.student != studentId
         })
+        const newUser = myClass.users.filter((members) => {
+            return members.member != studentId
+        })
+        
         myClass.students = newClass
+        myClass.users = newUser
         await myClass.save()
         res.send({
             myClass,
