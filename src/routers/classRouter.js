@@ -186,7 +186,7 @@ router.post('/class/admin/leave/id/:id', auth, authAdmin, async (req, res) => {
         const newClassAdmin = checkClass.admins.filter(admin => {
             return admin.admin != adminId.toString()
         })
-        if (newClassAdmin.length === 0)
+        if (newClassAdmin.length === 0 && checkClass.students.length > 0)
             return res.status(406).send({
                 error: "Class must have One admin"
             })
