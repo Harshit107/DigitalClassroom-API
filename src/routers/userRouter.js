@@ -13,7 +13,9 @@ router.get('/verify/email/:id',async(req,res)=> {
         
     const id = req.params.id;
     const user = await User.findOne( {_id : id } )
+    
     const htmlPath = path.join(__dirname, '../../');
+    
 
     if(!user)
         return res.status(404).send({error : 'Link expired'})
@@ -45,7 +47,6 @@ router.post('/users/create', async (req, res) => {
     const user = req.body
 
     try {
-
         const fUser = await User.find({email : req.body.email})
         if(fUser.length > 0 )
             return res.status(404).send({error : "User is already registered with us"})
@@ -251,7 +252,7 @@ router.post('/users/password/request', async (req, res) => {
         <body style=" color: black; text-align: center ">
     
         <div style="margin-top: 100px;">
-        <img src="https://harshit-keshari.tk/img/rmail-logo.png"
+        <img src="https://harshit107.netlify.app/img/rmail-logo.png"
          style="width: 100px; height: 100px; margin-top : 20px" >
          <p style="font-size: 28px;">Reset Password</p>
          <p style="font-size: 18px;">${messageWEB}</p>

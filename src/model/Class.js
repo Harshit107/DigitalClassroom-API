@@ -3,7 +3,6 @@ const fs = require('fs')
 
 
 const classSchema = new mongoose.Schema({
-
     className : {
         type : String,
         trim : true,

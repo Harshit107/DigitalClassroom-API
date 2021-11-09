@@ -13,7 +13,7 @@ const sendMail = async function(email,_id="",preHtml){
 
     var url = 'https://digitalclassroom.herokuapp.com/verify/email/'
     
-    const message = `Hi, Only verified accout have access to use DigitalClassroom feature\n Click the link below to verify your email address\n\n${url+_id}`
+    const message = `Hi, Only verified accout have access to use DigitalClassroom feature. Click the link below to verify your email address\n\n${url+_id}`
        const html =  preHtml ||  `<!DOCTYPE html>
         <html lang="en">
             <head>
@@ -23,7 +23,7 @@ const sendMail = async function(email,_id="",preHtml){
             </head>
         <body style=" color: black; text-align: center ">
             <div style="margin-top: 100px;">
-                <img src="https://harshit-keshari.tk/img/rmail-logo.png"
+                <img src="https://harshit107.netlify.app/img/rmail-logo.png"
                 style="width: 100px; height: 100px; margin-top : 20px" >
                 <p style="font-size: 28px;">Verify your email</p>
                 <p style="font-size: 18px;">Hi, Only verified accout have access to use DigitalClassroom feature\n

@@ -96,17 +96,14 @@ userSchema.pre('save', async function (next) {
 userSchema.statics.findByCredentails = async(email,password)=>{
     
     const user = await User.findOne({ "email": email })
-    
     if(!user)
-        throw new Error('No Email Found');
-    
+        throw new Error('No Email Found');    
     const checkPassworMatch = await bcrypt.compare(password,user.password)
     if(!checkPassworMatch){
         throw new Error('Invalid Password')
     }
-    return user
+    return user;
 }
-
 
 
 userSchema.methods.generateToken = async function () {
@@ -117,10 +114,8 @@ userSchema.methods.generateToken = async function () {
     user.tokens = user.tokens.concat({
         token
     })
-
     await user.save()
     return token
-
 }
 const User = mongoose.model('User', userSchema)
 
