@@ -6,7 +6,6 @@ const sendEmail = require('../email/verifyEmail')
 const sendMail = require('../email/sendMail')
 const path = require('path')
 const { route } = require('./developerRouter.js')
-
 router.get('/verify/email/:id',async(req,res)=> {
 
     try {

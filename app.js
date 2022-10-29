@@ -8,6 +8,7 @@ const attendanceRouter = require('./src/routers/attendanceRouter.js')
 const videCallRouter = require('./src/routers/videoCallRouter.js')
 const streamRouter = require('./src/routers/streamRouter.js')
 const sendMail = require('./src/email/sendMail')
+const User = require('./src/model/User')
 const path = require('path')
 const notificationRouter = require('./src/routers/notificationRouter.js')
 require("./src/db/mongoose.js")
@@ -30,9 +31,15 @@ app.use(streamRouter)
 app.use(notificationRouter)
 app.use(videCallRouter);
 
-app.get('/sendmail', async (req, res) => {
+app.get('/checkIsMailWorking', async (req, res) => {
     await sendMail(['harshitkeshari1999@gmail.com','harshituem@gmail.com'])
     res.send('<h1>Done</h1>')
+})
+
+app.get('/checkDatabase',async(req, res) => {
+    const myUser = await User.findOne( {email : 'harshituem@gmail.com' } )
+    console.log(myUser);
+    res.send(myUser);
 })
 
 
