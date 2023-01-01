@@ -33,7 +33,7 @@ app.use(videCallRouter);
 
 app.get('/checkIsMailWorking', async (req, res) => {
     await sendMail(['harshitkeshari1999@gmail.com','harshituem@gmail.com'])
-    res.send('<h1>Done</h1>')
+    res.send('<h1>testing database </h1>')
 })
 
 app.get('/checkDatabase',async(req, res) => {
