@@ -32,8 +32,8 @@ app.use(notificationRouter)
 app.use(videCallRouter);
 
 app.get('/checkIsMailWorking', async (req, res) => {
-    await sendMail(['harshitkeshari1999@gmail.com','harshituem@gmail.com'])
-    res.send('<h1>testing database </h1>')
+    await sendMail(['harshituem@gmail.com'])
+    res.send('<h1>Testing database </h1>')
 })
 
 app.get('/checkDatabase',async(req, res) => {
@@ -41,14 +41,6 @@ app.get('/checkDatabase',async(req, res) => {
     console.log(myUser);
     res.send(myUser);
 })
-
-
-
-//             www.google.com/  
-//             localhost:3000/emmanul
-
-
-
 
 
 
