@@ -18,6 +18,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "monaco-editor": "^0.27.0",
+     "json2csv": "^5.0.3",
     "mongoose": "^5.10.5",
     "node-fetch": "^2.6.1",
     "nodemailer": "^6.4.11",
