@@ -6,8 +6,6 @@ const auth = require('../auth.js')
 const authAdmin = require('../authAdmin.js')
 const User = require('../model/User.js')
 const mongoose = require('mongoose')
-
-const json2csv = require('json2csv').parse;
 const fs = require('fs');
 const { match } = require('assert')
 
