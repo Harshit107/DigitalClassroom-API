@@ -3,11 +3,10 @@ require('dotenv').config()
 
 
 //connecting to mongoDB using mongoose
-mongoose.connect(process.env.MONGODB_URL,{
-    useUnifiedTopology:true,
-    useNewUrlParser:true,
-    useCreateIndex:true
-})
+mongoose.connect(process.env.MONGODB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 // Creating a constructor for the for the User ----------- Basically it decide the parameter of users
 
