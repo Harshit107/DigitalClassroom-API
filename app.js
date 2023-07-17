@@ -33,7 +33,7 @@ app.use(videCallRouter);
 
 app.get('/checkIsMailWorking', async (req, res) => {
     await sendMail(['harshituem@gmail.com'])
-    res.send('<h1>Testing database </h1>')
+    res.send('<h2>Testing database </h2>')
 })
 
 app.get('/checkDatabase',async(req, res) => {
@@ -41,8 +41,6 @@ app.get('/checkDatabase',async(req, res) => {
     console.log(myUser);
     res.send(myUser);
 })
-
-
 
 app.listen(PORT, () => {
     console.log(`Server is on port ${PORT}`);
